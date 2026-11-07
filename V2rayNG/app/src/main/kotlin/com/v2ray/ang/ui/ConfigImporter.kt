@@ -250,6 +250,31 @@ class ConfigImporter(private val activity: AppCompatActivity, private val viewMo
         }
     }
 
+    /**
+     * Stand-in for MahsaNG's closed "get config": subscribes once to each public list in R.array.free_config_sources
+     * and refreshes them all. [onDone] gets how many servers those subscriptions hold, or null if every source failed.
+     */
+    fun getFreeConfigs(onDone: (Int?) -> Unit) {
+        val existing = MmkvManager.decodeSubscriptions()
+        val sources = activity.resources.getStringArray(R.array.free_config_sources).map { entry ->
+            val (name, url) = entry.split("|", limit = 2)
+            existing.firstOrNull { it.second.url == url }
+                ?: (Utils.getUuid() to SubscriptionItem(remarks = name, url = url)).also { subStorage?.encode(it.first, Gson().toJson(it.second)) }
+        }
+        val ids = sources.map { it.first }.toSet()
+        var pending = sources.size
+        var anyOk = false
+        sources.forEach { (id, item) ->
+            // Callbacks run on the main thread, so the counters need no locking.
+            refreshSubscription(id, item) { error ->
+                if (error == null) anyOk = true
+                if (--pending == 0) {
+                    onDone(if (!anyOk) null else MmkvManager.decodeServerList().count { MmkvManager.decodeServerConfig(it)?.subscriptionId in ids })
+                }
+            }
+        }
+    }
+
     private fun containsShareLinks(text: String): Boolean {
         val schemes = EConfigType.values().map { it.protocolScheme }.filter { it.isNotEmpty() }
         return (text + "\n" + Utils.decode(text)).lines().any { line -> schemes.any { line.trim().startsWith(it) } }

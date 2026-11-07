@@ -35,6 +35,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val isRunning by lazy { MutableLiveData<Boolean>() }
     val updateListAction by lazy { MutableLiveData<Int>() }
     val updateTestResultAction by lazy { MutableLiveData<String>() }
+    /** Fires once every server of a "test all" run has reported, pass or fail. */
+    val testsFinishedAction by lazy { MutableLiveData<Unit>() }
+    private var pendingTests = 0
+
+    /** Main thread only. */
+    private fun testDone() {
+        if (pendingTests > 0 && --pendingTests == 0) testsFinishedAction.value = Unit
+    }
 
     private val tcpingTestScope by lazy { CoroutineScope(Dispatchers.IO) }
 
@@ -109,18 +117,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         updateListAction.value = -1 // update all
 
         getApplication<AngApplication>().toast(R.string.connection_test_testing)
-        for (item in serversCache) {
-            item.config.getProxyOutbound()?.let { outbound ->
-                val serverAddress = outbound.getServerAddress()
-                val serverPort = outbound.getServerPort()
-                if (serverAddress != null && serverPort != null) {
-                    tcpingTestScope.launch {
-                        val testResult = SpeedtestUtil.tcping(serverAddress, serverPort)
-                        launch(Dispatchers.Main) {
-                            MmkvManager.encodeServerTestDelayMillis(item.guid, testResult)
-                            updateListAction.value =  getPosition(item.guid)
-                        }
-                    }
+        val targets = serversCache.mapNotNull { item ->
+            val outbound = item.config.getProxyOutbound() ?: return@mapNotNull null
+            val address = outbound.getServerAddress() ?: return@mapNotNull null
+            val port = outbound.getServerPort() ?: return@mapNotNull null
+            Triple(item.guid, address, port)
+        }
+        pendingTests = targets.size
+        for ((guid, serverAddress, serverPort) in targets) {
+            tcpingTestScope.launch {
+                val testResult = SpeedtestUtil.tcping(serverAddress, serverPort)
+                launch(Dispatchers.Main) {
+                    MmkvManager.encodeServerTestDelayMillis(guid, testResult)
+                    updateListAction.value =  getPosition(guid)
+                    testDone()
                 }
             }
         }
@@ -132,11 +142,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         updateListAction.value = -1 // update all
 
         getApplication<AngApplication>().toast(R.string.connection_test_testing)
+        // The test service answers every config it is sent; the ones never sent are counted off here.
+        pendingTests = serversCache.size
+        val items = serversCache.toList()
         viewModelScope.launch(Dispatchers.Default) { // without Dispatchers.Default viewModelScope will launch in main thread
-            for (item in serversCache) {
+            for (item in items) {
                 val config = V2rayConfigUtil.getV2rayConfig(getApplication(), item.guid)
                 if (config.status) {
                     MessageUtil.sendMsg2TestService(getApplication(), AppConfig.MSG_MEASURE_CONFIG, Pair(item.guid, config.content))
+                } else {
+                    withContext(Dispatchers.Main) { testDone() }
                 }
             }
         }
@@ -252,6 +267,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     val resultPair = intent.getSerializableExtra("content") as Pair<String, Long>
                     MmkvManager.encodeServerTestDelayMillis(resultPair.first, resultPair.second)
                     updateListAction.value = getPosition(resultPair.first)
+                    testDone()
                 }
             }
         }

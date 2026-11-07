@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
@@ -22,9 +23,9 @@ import com.v2ray.ang.databinding.ItemTvTileBinding
 import com.v2ray.ang.dto.EConfigType
 import com.v2ray.ang.ui.BaseActivity
 import com.v2ray.ang.ui.ConfigImporter
-import com.v2ray.ang.ui.LogcatActivity
 import com.v2ray.ang.util.MmkvManager
 import com.v2ray.ang.util.SpeedtestUtil
+import com.v2ray.ang.viewmodel.MainViewModel
 
 class TvDashboardActivity : BaseActivity() {
     private companion object {
@@ -39,6 +40,10 @@ class TvDashboardActivity : BaseActivity() {
     private var ambientColor = Color.TRANSPARENT
     private var stateDetail = ""
     private var currentTest: TvConnection.Test? = null
+    private val viewModel: MainViewModel by viewModels()
+    private val importer = ConfigImporter(this) { viewModel }
+    private var fetching = false
+    private var fetchResult: String? = null
 
     private val requestVpnPermission = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (it.resultCode == RESULT_OK) TvConnection.connect() else TvConnection.permissionDenied()
@@ -55,6 +60,7 @@ class TvDashboardActivity : BaseActivity() {
         binding.btnConnect.setOnClickListener { onPrimaryAction() }
         binding.cardActive.setOnClickListener { openServers() }
 
+        tile(binding.tileGetConfigs, R.drawable.ic_cloud_download_white_24dp, R.string.free_configs_title) { getFreeConfigs() }
         tile(binding.tileServers, R.drawable.ic_tv_servers, R.string.tv_tile_servers) { openServers() }
         tile(binding.tileSubscriptions, R.drawable.ic_subscriptions_white_24dp, R.string.tv_tile_subscriptions) {
             startActivity(Intent(this, TvSubscriptionsActivity::class.java))
@@ -66,9 +72,6 @@ class TvDashboardActivity : BaseActivity() {
             if (selectedConfig() == null) openServers() else TvConnection.testSelected()
         }
         tile(binding.tileSettings, R.drawable.ic_settings_white_24dp, R.string.tv_tile_settings) { openSettings() }
-        tile(binding.tileLogs, R.drawable.ic_logcat_white_24dp, R.string.tv_tile_logs) {
-            startActivity(Intent(this, LogcatActivity::class.java))
-        }
 
         TvConnection.state.observe(this) { render(it) }
         TvConnection.test.observe(this) { renderTest(it) }
@@ -104,6 +107,8 @@ class TvDashboardActivity : BaseActivity() {
 
     /** Each tile says something true about the app right now, so the grid reads as a status board. */
     private fun renderTileHints() {
+        binding.tileGetConfigs.hint.text =
+            if (fetching) getString(R.string.free_configs_fetching) else fetchResult ?: getString(R.string.free_configs_hint)
         binding.tileServers.hint.text = getString(R.string.tv_tile_servers_hint, MmkvManager.decodeServerList().size)
         val subs = MmkvManager.decodeSubscriptions().size
         binding.tileSubscriptions.hint.text =
@@ -118,10 +123,27 @@ class TvDashboardActivity : BaseActivity() {
         }
         val vpnMode = (settingsStorage?.decodeString(AppConfig.PREF_MODE) ?: "VPN") == "VPN"
         binding.tileSettings.hint.setText(if (vpnMode) R.string.tv_tile_settings_vpn else R.string.tv_tile_settings_proxy)
-        binding.tileLogs.hint.setText(R.string.tv_tile_logs_hint)
     }
 
     private fun openServers() = startActivity(Intent(this, TvServersActivity::class.java))
+
+    private fun getFreeConfigs() {
+        if (fetching) return
+        fetching = true
+        refreshFetchUi()
+        importer.getFreeConfigs { count ->
+            fetching = false
+            fetchResult = if (count == null) getString(R.string.free_configs_failed)
+                else resources.getQuantityString(R.plurals.free_configs_done, count, count)
+            refreshFetchUi()
+            if (count != null && count > 0 && !isFinishing) openServers()
+        }
+    }
+
+    private fun refreshFetchUi() {
+        renderTileHints()
+        render(TvConnection.state.value ?: TvConnection.State.DISCONNECTED)
+    }
 
     private fun openSettings() = startActivity(Intent(this, TvSettingsActivity::class.java))
 
@@ -133,8 +155,7 @@ class TvDashboardActivity : BaseActivity() {
             TvConnection.State.CONNECTING, TvConnection.State.DISCONNECTING -> Unit
             TvConnection.State.CONNECTED -> TvConnection.disconnect()
             else -> when {
-                MmkvManager.decodeServerList().isEmpty() ->
-                    startActivity(Intent(this, TvServersActivity::class.java).putExtra(TvServersActivity.EXTRA_OPEN_ADD, true))
+                MmkvManager.decodeServerList().isEmpty() -> getFreeConfigs()
                 selectedConfig() == null -> openServers()
                 else -> {
                     val vpnMode = (settingsStorage?.decodeString(AppConfig.PREF_MODE) ?: "VPN") == "VPN"
@@ -203,7 +224,7 @@ class TvDashboardActivity : BaseActivity() {
         state == TvConnection.State.CONNECTING -> R.string.tv_status_connecting
         state == TvConnection.State.DISCONNECTING -> R.string.tv_status_disconnecting
         state == TvConnection.State.CONNECTED || state == TvConnection.State.DISCONNECTING -> R.string.tv_action_disconnect
-        MmkvManager.decodeServerList().isEmpty() -> R.string.tv_action_add_config
+        MmkvManager.decodeServerList().isEmpty() -> if (fetching) R.string.free_configs_fetching else R.string.free_configs_title
         selectedConfig() == null -> R.string.tv_action_choose_server
         else -> R.string.tv_action_connect
     }

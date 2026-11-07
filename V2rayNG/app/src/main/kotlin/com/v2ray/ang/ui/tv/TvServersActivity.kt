@@ -58,6 +58,12 @@ class TvServersActivity : TvRailActivity() {
             if (index >= 0) adapter.notifyItemChanged(index) else adapter.notifyDataSetChanged()
             renderSummary()
         }
+        // Working servers first, fastest on top, as soon as a test run is complete.
+        viewModel.testsFinishedAction.observe(this) {
+            MmkvManager.sortByTestResults()
+            viewModel.reloadServerList()
+            focusRow(0)
+        }
         TvConnection.results.observe(this) { guid ->
             viewModel.getPosition(guid).takeIf { it >= 0 }?.let { adapter.notifyItemChanged(it) }
         }

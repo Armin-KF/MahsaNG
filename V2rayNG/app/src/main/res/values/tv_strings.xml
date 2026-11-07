@@ -98,7 +98,6 @@
     <string name="tv_tile_test_hint">Last: %s</string>
     <string name="tv_tile_settings_vpn">VPN mode</string>
     <string name="tv_tile_settings_proxy">Proxy-only mode</string>
-    <string name="tv_tile_logs_hint">Diagnostics</string>
     <string name="tv_tile_subs_none">None yet</string>
     <plurals name="tv_tile_subs_count">
         <item quantity="one">%d subscription</item>
@@ -106,4 +105,19 @@
     </plurals>
     <string name="tv_status_unreachable">No internet</string>
     <string name="tv_detail_unreachable">This server is not responding. Try another one.</string>
+
+    <string name="free_configs_title">Get free configs</string>
+    <string name="free_configs_hint">Public servers</string>
+    <string name="free_configs_fetching">Downloading…</string>
+    <string name="free_configs_failed">Couldn\'t download configs</string>
+    <plurals name="free_configs_done">
+        <item quantity="one">%d server</item>
+        <item quantity="other">%d servers</item>
+    </plurals>
+    <!-- name|url. Mahsa's open per-carrier lists, plus a large public collector because those are often small. -->
+    <string-array name="free_config_sources" translatable="false">
+        <item>Mahsa · MTN|https://raw.githubusercontent.com/mahsanet/MahsaFreeConfig/main/mtn/sub_1.txt</item>
+        <item>Mahsa · MCI|https://raw.githubusercontent.com/mahsanet/MahsaFreeConfig/main/mci/sub_1.txt</item>
+        <item>Public mix|https://raw.githubusercontent.com/MatinGhanbari/v2ray-configs/main/subscriptions/v2ray/subs/sub1.txt</item>
+    </string-array>
 </resources>

@@ -219,23 +219,23 @@
                 android:clipChildren="false"
                 android:orientation="horizontal">
 
+                <include android:id="@+id/tile_get_configs" layout="@layout/item_tv_tile" />
+                <Space android:layout_width="@dimen/tv_space_s" android:layout_height="0dp" />
                 <include android:id="@+id/tile_servers" layout="@layout/item_tv_tile" />
-                <Space android:layout_width="@dimen/tv_space_s" android:layout_height="0dp" />
+            </LinearLayout>
+
+            <Space android:layout_width="0dp" android:layout_height="@dimen/tv_space_s" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipChildren="false"
+                android:orientation="horizontal">
+
                 <include android:id="@+id/tile_subscriptions" layout="@layout/item_tv_tile" />
-            </LinearLayout>
-
-            <Space android:layout_width="0dp" android:layout_height="@dimen/tv_space_s" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:clipChildren="false"
-                android:orientation="horizontal">
-
+                <Space android:layout_width="@dimen/tv_space_s" android:layout_height="0dp" />
                 <include android:id="@+id/tile_add" layout="@layout/item_tv_tile" />
-                <Space android:layout_width="@dimen/tv_space_s" android:layout_height="0dp" />
-                <include android:id="@+id/tile_test" layout="@layout/item_tv_tile" />
             </LinearLayout>
 
             <Space android:layout_width="0dp" android:layout_height="@dimen/tv_space_s" />
@@ -247,9 +247,9 @@
                 android:clipChildren="false"
                 android:orientation="horizontal">
 
-                <include android:id="@+id/tile_settings" layout="@layout/item_tv_tile" />
+                <include android:id="@+id/tile_test" layout="@layout/item_tv_tile" />
                 <Space android:layout_width="@dimen/tv_space_s" android:layout_height="0dp" />
-                <include android:id="@+id/tile_logs" layout="@layout/item_tv_tile" />
+                <include android:id="@+id/tile_settings" layout="@layout/item_tv_tile" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

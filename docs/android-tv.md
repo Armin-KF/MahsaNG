@@ -54,10 +54,10 @@ only `MmkvManager`, `AngConfigManager`, `V2RayServiceManager`, `V2rayConfigUtil`
 
 | Screen | On TV | Notes |
 |---|---|---|
-| Dashboard | **New** `ui/tv/TvDashboardActivity` | Leanback launcher entry |
-| Servers | **New** `ui/tv/TvServersActivity` | All `menu_main` actions are here |
+| Dashboard | **New** `ui/tv/TvDashboardActivity` | Leanback launcher entry. Tiles: Get free configs, Servers, Subscriptions, Add, Test, Settings |
+| Servers | **New** `ui/tv/TvServersActivity` | All `menu_main` actions are here. Re-sorts by latency when a test-all run finishes |
 | Subscriptions | **New** `ui/tv/TvSubscriptionsActivity` | Replaces `SubSettingActivity` on TV |
-| Settings | **New** `ui/tv/TvSettingsActivity` | Rail plus the phone's `SettingsFragment`, via `xml-television/pref_settings.xml`; every key kept |
+| Settings | **New** `ui/tv/TvSettingsActivity` | Rail plus the phone's `SettingsFragment`, via `xml-television/pref_settings.xml`; every key kept. Logs is the last rail item |
 | `ServerActivity`, `ServerCustomConfigActivity`, `SubEditActivity`, `RoutingSettingsActivity`, `PerAppProxyActivity`, `UserAssetActivity`, `LogcatActivity`, `ScannerActivity` | Phone layouts on the TV theme | `values-television/styles.xml` plus `BaseActivity.adaptPhoneLayoutToTv` |
 | `MainActivity` | Redirects to the dashboard on TV | Notifications, shortcuts and URL schemes all land there |
 
@@ -96,6 +96,29 @@ Kept to what the build required. Protocol and config generation code is untouche
 - `ConfigImporter.refreshSubscription`: refuses responses with no share links. `importBatchConfig` removes a subscription's servers before parsing, so a captive portal page used to wipe them.
 - `SubscriptionItem`: added optional `lastUpdated` and `lastError`.
 
+### Get free configs
+
+The shipped app's "get config" fetches Mahsa's encrypted pool through closed code, so this build does not have it.
+`ConfigImporter.getFreeConfigs` stands in for it: it adds each public list in `R.array.free_config_sources` (`tv_strings.xml`,
+`name|url`) as a subscription once, then refreshes them all. The dashboard tile, the dashboard's primary button when there
+are no servers, and the phone's old `get_rot_config_button7` all call it.
+
+| Source | Content on 2026-11-07 |
+|---|---|
+| `mahsanet/MahsaFreeConfig` `mtn/sub_1.txt` | 11 Shadowsocks, 1 VLESS |
+| `mahsanet/MahsaFreeConfig` `mci/sub_1.txt` | 2 Hysteria2, which this build cannot parse |
+| `MatinGhanbari/v2ray-configs` `subs/sub1.txt` | About 195 VLESS, VMess, Trojan and Shadowsocks |
+
+The shipped app's fallback source, `yebekhe/TelegramV2rayCollector` (`tg_accounts_url`), has been deleted from GitHub.
+`mahsanet/MahsaFreeConfig/app/sub.txt` is encrypted and is not used.
+
+### Sorting
+
+`MainViewModel` counts the replies to a "Test all" or "Quick TCP test" run (the test service answers every config it is sent)
+and fires `testsFinishedAction` when the last one arrives. The Servers screen then sorts: serverless configs first, then working
+servers by latency, then failed and untested ones. `MmkvManager.sortByTestResults` pins configs whose proxy outbound is
+tagged `fakeproxy-out` (`TvFormat.SERVERLESS_TAG`).
+
 ## 6. Files
 
 New: `ui/ConfigImporter.kt` (import code moved out of `MainActivity` and shared with TV), `ui/tv/*`, `test/.../TvFormatTest.kt`,
@@ -103,7 +126,7 @@ New: `ui/ConfigImporter.kt` (import code moved out of `MainActivity` and shared 
 
 Moved: 44 unbuildable resource files to `app/src/closed-tree-res/`.
 
-Changed for TV: `AndroidManifest.xml`, `BaseActivity`, `MainActivity`, `SettingsActivity`, `MainViewModel`, `activity_sub_edit.xml`.
+Changed for TV: `AndroidManifest.xml`, `BaseActivity`, `MainActivity`, `SettingsActivity`, `MainViewModel`, `MmkvManager`, `activity_sub_edit.xml`.
 
 Changed for the build: see section 1. `ServerActivity` lost 278 lines of branches for types and fields the published code cannot save.
 
@@ -124,6 +147,9 @@ Run on the Android TV API 33 x86 emulator, driven by remote key events only. The
 | Settings: all categories, list dialog, per-app screen, Back to rail | Pass |
 | D-pad edges on lists, rail and settings | Pass, after fixing several leaks found here |
 | 1080p@320, 4K@640, 4K@320, 1080p@240, 720p@213 | Dashboard checked at all; server list at 1080p@320 and 4K@320. Sizes set with `wm size` and `wm density` |
+| Get free configs from the dashboard tile | Pass. 30 servers became 124; Servers opened afterwards |
+| Auto-sort after Quick TCP test, serverless config pinned first | Pass |
+| Settings categories and dashboard tiles by mouse click (`hw.screen=multi-touch`) | Pass |
 | Persian RTL | Pass after fixes |
 | Unit tests | 6 pass (3 are the new `TvFormatTest`) |
 | `assembleDevDebug`, `assembleProdRelease` | Both build |
@@ -134,6 +160,10 @@ Run on the Android TV API 33 x86 emulator, driven by remote key events only. The
 - **Phone UI compiles but was not run.** The published phone layout needed repairs just to compile, and no phone image was used.
 - **Only SOCKS was tested end to end.** VLESS, VMess, Trojan, Shadowsocks, WireGuard and custom JSON are covered by unchanged upstream code, but were not connected here.
 - **YouTube & Twitter (no server)** (Servers → Add configuration) imports Mahsa's public `ServerLess_TLSFrag_Xray_Config.json` as a custom config: direct connections with the TLS handshake fragmented. It connected and passed the test on the emulator, which has no filtering, so whether it gets past a real filter is untested.
+- **Get free configs on a first run was not tested.** With no servers the primary button fetches instead of opening Add; only the tile path, with servers already saved, was run. The phone button was not run.
+- **All free config sources are on `raw.githubusercontent.com`**, which has been filtered or throttled in Iran at times. If it is unreachable, a new user gets no servers. Whether the fetch goes through the serverless config when it is connected was not checked.
+- The public servers are unvetted. Expect many dead ones; run Test all before choosing.
+- In Settings, the Logs rail item sits partly below the fold at 1080p. The rail scrolls to it.
 - Invalid-config and start-timeout error paths are implemented but were not triggered.
 - After repeated force-stops of a running VPN, the app's UID lost network until the emulator rebooted. The cause was not found. It did not recur in normal use, and a user would not normally do this.
 - Manrope has no Persian glyphs, so Persian text uses the system font. That is deliberate, but the two scripts do not match in style.

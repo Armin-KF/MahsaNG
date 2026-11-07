@@ -97,6 +97,14 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             }
         }
 
+        binding.getRotConfigButton7.setOnClickListener {
+            toast(R.string.free_configs_fetching)
+            importer.getFreeConfigs { count ->
+                if (count == null) toast(R.string.free_configs_failed)
+                else toast(resources.getQuantityString(R.plurals.free_configs_done, count, count))
+            }
+        }
+
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter

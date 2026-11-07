@@ -92,11 +92,19 @@
     <string name="tv_tile_test_hint">آخرین: %s</string>
     <string name="tv_tile_settings_vpn">حالت VPN</string>
     <string name="tv_tile_settings_proxy">فقط پروکسی</string>
-    <string name="tv_tile_logs_hint">عیب‌یابی</string>
     <string name="tv_tile_subs_none">هنوز ندارید</string>
     <plurals name="tv_tile_subs_count">
         <item quantity="one">%d اشتراک</item>
         <item quantity="other">%d اشتراک</item>
+    </plurals>
+
+    <string name="free_configs_title">دریافت کانفیگ رایگان</string>
+    <string name="free_configs_hint">سرورهای عمومی</string>
+    <string name="free_configs_fetching">در حال دریافت…</string>
+    <string name="free_configs_failed">دریافت کانفیگ ناموفق بود</string>
+    <plurals name="free_configs_done">
+        <item quantity="one">%d سرور</item>
+        <item quantity="other">%d سرور</item>
     </plurals>
     <string name="tv_status_unreachable">بدون اینترنت</string>
     <string name="tv_detail_unreachable">این سرور پاسخ نمی‌دهد. سرور دیگری را امتحان کنید.</string>

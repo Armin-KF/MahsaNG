@@ -5,6 +5,7 @@ import com.tencent.mmkv.MMKV
 import com.v2ray.ang.dto.ServerAffiliationInfo
 import com.v2ray.ang.dto.ServerConfig
 import com.v2ray.ang.dto.SubscriptionItem
+import com.v2ray.ang.ui.tv.TvFormat
 
 object MmkvManager {
     const val ID_MAIN = "MAIN"
@@ -159,15 +160,17 @@ object MmkvManager {
     }
 
     fun sortByTestResults( ) {
-        data class ServerDelay(var guid: String, var testDelayMillis: Long)
+        data class ServerDelay(var guid: String, var testDelayMillis: Long, val pinned: Boolean)
 
         val serverDelays = mutableListOf<ServerDelay>()
         val serverList = decodeServerList()
         serverList.forEach { key ->
             val delay = decodeServerAffiliationInfo(key)?.testDelayMillis ?: 0L
-            serverDelays.add(ServerDelay(key, if (delay <= 0L) 999999 else delay))
+            // Serverless configs (YouTube & Twitter) stay on top: they need no server, so latency says little about them.
+            val pinned = decodeServerConfig(key)?.getProxyOutbound()?.tag == TvFormat.SERVERLESS_TAG
+            serverDelays.add(ServerDelay(key, if (delay <= 0L) 999999 else delay, pinned))
         }
-        serverDelays.sortBy { it.testDelayMillis }
+        serverDelays.sortWith(compareBy({ !it.pinned }, { it.testDelayMillis }))
 
         serverDelays.forEach {
             serverList.remove(it.guid)
