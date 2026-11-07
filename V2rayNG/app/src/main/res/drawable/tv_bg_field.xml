@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true">
+        <shape>
+            <solid android:color="@color/tv_surface_2" />
+            <stroke android:width="@dimen/tv_status_stroke" android:color="@color/tv_focus_fill" />
+            <corners android:radius="@dimen/tv_radius_s" />
+            <padding android:left="@dimen/tv_space_m" android:right="@dimen/tv_space_m" android:top="@dimen/tv_space_s" android:bottom="@dimen/tv_space_s" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <solid android:color="@color/tv_surface_1" />
+            <stroke android:width="@dimen/tv_outline_width" android:color="@color/tv_outline" />
+            <corners android:radius="@dimen/tv_radius_s" />
+            <padding android:left="@dimen/tv_space_m" android:right="@dimen/tv_space_m" android:top="@dimen/tv_space_s" android:bottom="@dimen/tv_space_s" />
+        </shape>
+    </item>
+</selector>

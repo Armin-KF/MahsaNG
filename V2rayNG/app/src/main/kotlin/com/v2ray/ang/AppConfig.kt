@@ -28,6 +28,7 @@ object AppConfig {
     const val PREF_SOCKS_PORT = "pref_socks_port"
     const val PREF_HTTP_PORT = "pref_http_port"
     const val PREF_LOGLEVEL = "pref_core_loglevel"
+    const val PREF_UI_MODE_NIGHT = "pref_ui_mode_night"
     const val PREF_LANGUAGE = "pref_language"
     const val PREF_PREFER_IPV6 = "pref_prefer_ipv6"
     const val PREF_ROUTING_DOMAIN_STRATEGY = "pref_routing_domain_strategy"
@@ -41,6 +42,8 @@ object AppConfig {
     const val PREF_CONFIRM_REMOVE = "pref_confirm_remove"
     const val PREF_START_SCAN_IMMEDIATE = "pref_start_scan_immediate"
 
+    const val PROTOCOL_HTTP: String = "http://"
+    const val PROTOCOL_HTTPS: String = "https://"
     const val HTTP_PROTOCOL: String = "http://"
     const val HTTPS_PROTOCOL: String = "https://"
 
@@ -64,6 +67,19 @@ object AppConfig {
     const val v2rayNGWikiMode = "https://github.com/2dust/v2rayNG/wiki/Mode"
     const val promotionUrl = "aHR0cHM6Ly85LjIzNDQ1Ni54eXovYWJjLmh0bWw="
     const val geoUrl = "https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/";
+
+    const val DelayTestUrl = "https://www.gstatic.com/generate_204"
+    const val DelayTestUrl2 = "https://www.google.com/generate_204"
+
+    // WireGuard defaults. Empty Mahsa noise values leave the core's own defaults in force.
+    const val WIREGUARD_LOCAL_ADDRESS_V4 = "172.16.0.2/32"
+    const val WIREGUARD_LOCAL_ADDRESS_V6 = "2606:4700:110:8f81:d551:a0:532e:a2b3/128"
+    const val WIREGUARD_LOCAL_MTU = "1420"
+    const val WIREGUARD_keep_alive = "0"
+    const val WIREGUARD_wnoise = ""
+    const val WIREGUARD_wnoisecount = ""
+    const val WIREGUARD_wnoisedelay = ""
+    const val WIREGUARD_wpayloadsize = ""
 
     const val DNS_AGENT = "1.1.1.1"
     const val DNS_DIRECT = "223.5.5.5"

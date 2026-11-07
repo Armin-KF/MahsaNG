@@ -42,6 +42,7 @@
 
                 <EditText
                     android:id="@+id/et_remarks"
+                android:nextFocusDown="@+id/chk_enable"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/edit_height"
                     android:inputType="text" />
@@ -63,6 +64,8 @@
 
                 <androidx.appcompat.widget.AppCompatCheckBox
                     android:id="@+id/chk_enable"
+                    android:nextFocusUp="@+id/et_remarks"
+                    android:nextFocusDown="@+id/et_url"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="2dp"
@@ -84,6 +87,7 @@
 
                 <EditText
                     android:id="@+id/et_url"
+                android:nextFocusUp="@+id/chk_enable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"

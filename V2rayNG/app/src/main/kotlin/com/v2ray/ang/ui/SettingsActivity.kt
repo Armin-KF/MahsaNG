@@ -6,8 +6,12 @@ import android.text.TextUtils
 import android.view.View
 import androidx.activity.viewModels
 import androidx.preference.*
+import androidx.recyclerview.widget.RecyclerView
 import com.v2ray.ang.AppConfig
+import com.v2ray.ang.BuildConfig
 import com.v2ray.ang.R
+import com.v2ray.ang.ui.tv.TvLinearLayoutManager
+import com.v2ray.ang.util.SpeedtestUtil
 import com.v2ray.ang.util.Utils
 import com.v2ray.ang.viewmodel.SettingsViewModel
 
@@ -43,8 +47,22 @@ class SettingsActivity : BaseActivity() {
 
         private val mode by lazy { findPreference<ListPreference>(AppConfig.PREF_MODE) }
 
+        override fun onCreateLayoutManager(): RecyclerView.LayoutManager =
+            if (Utils.isTv(requireContext())) TvLinearLayoutManager(requireContext()) else super.onCreateLayoutManager()
+
         override fun onCreatePreferences(bundle: Bundle?, s: String?) {
-            addPreferencesFromResource(R.xml.pref_settings)
+            setPreferencesFromResource(R.xml.pref_settings, s)
+
+            findPreference<Preference>("tv_about_app")?.summary = BuildConfig.VERSION_NAME
+            findPreference<Preference>("tv_about_core")?.summary = SpeedtestUtil.getLibVersion()
+            findPreference<Preference>("tv_about_assets")?.setOnPreferenceClickListener {
+                startActivity(Intent(activity, UserAssetActivity::class.java))
+                true
+            }
+            findPreference<Preference>("tv_about_logs")?.setOnPreferenceClickListener {
+                startActivity(Intent(activity, LogcatActivity::class.java))
+                true
+            }
 
             routingCustom?.setOnPreferenceClickListener {
                 startActivity(Intent(activity, RoutingSettingsActivity::class.java))

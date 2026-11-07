@@ -1,5 +1,4 @@
 package com.v2ray.ang.service
-import com.v2ray.ang.gfwknocker.*
 
 import android.app.*
 import android.content.BroadcastReceiver
@@ -42,8 +41,6 @@ object V2RayServiceManager {
     private const val NOTIFICATION_PENDING_INTENT_STOP_V2RAY = 1
     private const val NOTIFICATION_ICON_THRESHOLD = 3000
 
-    var TLS_serv: backServ? = null
-
     val v2rayPoint: V2RayPoint = Libv2ray.newV2RayPoint(V2RayCallback(), Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1)
     private val mMsgReceive = ReceiveMessageHandler()
     private val mainStorage by lazy { MMKV.mmkvWithID(MmkvManager.ID_MAIN, MMKV.MULTI_PROCESS_MODE) }
@@ -53,7 +50,7 @@ object V2RayServiceManager {
         set(value) {
             field = value
             Seq.setContext(value?.get()?.getService()?.applicationContext)
-            Libv2ray.initV2Env(Utils.userAssetPath(value?.get()?.getService()))
+            Libv2ray.initV2Env(Utils.userAssetPath(value?.get()?.getService()), "")
         }
     var currentConfig: ServerConfig? = null
 
@@ -124,12 +121,6 @@ object V2RayServiceManager {
 
     fun startV2rayPoint() {
 
-        // ------- GFW-knocker fragmentor service ----------------------
-        TLS_serv = backServ()
-        TLS_serv!!.start_HTTPS_service()
-        TLS_serv!!.start_TLS_service()
-        // -------------------------------------------------------------
-
         val service = serviceControl?.get()?.getService() ?: return
         val guid = mainStorage?.decodeString(MmkvManager.KEY_SELECTED_SERVER) ?: return
         val config = MmkvManager.decodeServerConfig(guid) ?: return
@@ -169,10 +160,6 @@ object V2RayServiceManager {
     }
 
     fun stopV2rayPoint() {
-        // ------- GFW-knocker fragmentor service ----------------------
-        TLS_serv!!.stop_HTTPS_service()
-        TLS_serv!!.stop_TLS_service()
-        // -------------------------------------------------------------
 
 
         val service = serviceControl?.get()?.getService() ?: return
@@ -243,10 +230,12 @@ object V2RayServiceManager {
         GlobalScope.launch(Dispatchers.IO) {
             val service = serviceControl?.get()?.getService() ?: return@launch
             var time = -1L
+            var time2 = -1L
             var errstr = ""
             if (v2rayPoint.isRunning) {
                 try {
-                    time = v2rayPoint.measureDelay()
+                    time = v2rayPoint.measureDelay(Utils.getDelayTestUrl())
+                    time2 = v2rayPoint.measureDelay(Utils.getDelayTestUrl(true))
                 } catch (e: Exception) {
                     Log.d(ANG_PACKAGE, "measureV2rayDelay: $e")
                     errstr = e.message?.substringAfter("\":") ?: "empty message"
@@ -255,7 +244,7 @@ object V2RayServiceManager {
             val result = if (time == -1L) {
                 service.getString(R.string.connection_test_error, errstr)
             } else {
-                service.getString(R.string.connection_test_available, time)
+                service.getString(R.string.connection_test_available, time, time2)
             }
 
             MessageUtil.sendMsg2UI(service, AppConfig.MSG_MEASURE_DELAY_SUCCESS, result)

@@ -56,6 +56,11 @@ android {
         main {
             jniLibs.srcDirs = ['libs']
             java.srcDirs += 'src/main/kotlin'
+            // Need classes that are closed-source upstream (see docs/android-tv.md). None is declared in the manifest.
+            java.exclude '**/ca/psiphon/**',
+                    '**/ang/GFW_*Activity.java',
+                    '**/ang/helper/GFW_*Activity.java',
+                    '**/ang/gfwknocker/BackServ.kt'
         }
     }
 
@@ -78,7 +83,7 @@ android {
     android.applicationVariants.all { variant ->
         // assign different version code for each output
         variant.outputs.each { output ->
-            output.outputFileName = "v2rayNG_" + variant.versionName + "_" + output.getFilter(com.android.build.OutputFile.ABI) + ".apk"
+            output.outputFileName = "v2rayNG_" + variant.versionName + "_" + (output.getFilter(com.android.build.OutputFile.ABI) ?: "universal") + ".apk"
 
                 output.versionCodeOverride =
                     project.ext.versionCodes.get(output.getFilter(com.android.build.OutputFile.ABI), 0) *
@@ -92,6 +97,11 @@ android {
     }
     namespace 'com.v2ray.ang'
     testNamespace 'com.v2ray.angTest'
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    // Same closed-source reason as java.exclude above; PluginManager also needs an unpublished AngApplication API.
+    exclude '**/ang/service/PsiphonVpnService.kt', '**/ang/gfwknocker/BackServ.kt', '**/ang/plugin/**'
 }
 
 dependencies {
@@ -125,7 +135,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation 'io.reactivex:rxjava:1.3.8'
     implementation 'io.reactivex:rxandroid:1.2.1'
-    implementation 'com.tbruyelle.rxpermissions:rxpermissions:0.9.4@aar'
+    implementation 'com.github.tbruyelle:RxPermissions:0.9.3@aar'
     implementation 'com.github.jorgecastilloprz:fabprogresscircle:1.01@aar'
     implementation 'me.drakeet.support:toastcompat:1.1.0'
     implementation 'com.blacksquircle.ui:editorkit:2.1.1'

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android TV design tokens. Screens reference these only; never hardcode visual values. -->
+<resources>
+    <!-- Surfaces -->
+    <color name="tv_bg">#0B0F12</color>
+    <color name="tv_surface_1">#151B20</color>
+    <color name="tv_surface_2">#20282F</color>
+    <color name="tv_surface_top">#1C242B</color>
+    <color name="tv_hairline">#14FFFFFF</color>
+    <color name="tv_halo">#38F2F5F7</color>
+    <color name="tv_outline">#2C363E</color>
+
+    <!-- Accent: brightened Mahsa green -->
+    <color name="tv_accent">#2ED3A2</color>
+    <color name="tv_accent_dim">#12976F</color>
+    <color name="tv_on_accent">#04231A</color>
+    <color name="tv_accent_bright">#5BEAC0</color>
+    <color name="tv_accent_deep">#1BAE84</color>
+    <color name="tv_accent_soft">#262ED3A2</color>
+    <color name="tv_accent_line">#662ED3A2</color>
+    <color name="tv_accent_halo">#552ED3A2</color>
+
+    <!-- Text -->
+    <color name="tv_text_primary_raw">#F2F5F7</color>
+    <color name="tv_text_secondary_raw">#AEB9C1</color>
+
+    <!-- Focus: every focused control inverts to this fill -->
+    <color name="tv_focus_fill">#F2F5F7</color>
+    <color name="tv_on_focus">#0B0F12</color>
+    <color name="tv_on_focus_secondary">#3A464F</color>
+    <color name="tv_on_focus_accent">#0A6B4E</color>
+
+    <!-- Connection status -->
+    <color name="tv_status_off">#8795A0</color>
+    <color name="tv_status_busy">#F5B841</color>
+    <color name="tv_status_busy_dark">#8A5A00</color>
+    <color name="tv_status_error">#FF6B6B</color>
+    <color name="tv_status_error_dark">#B3261E</color>
+
+    <!-- Overscan-safe margins (Android TV guideline: 5% of 960x540dp) -->
+    <dimen name="tv_safe_h">48dp</dimen>
+    <dimen name="tv_safe_v">27dp</dimen>
+
+    <!-- Type scale -->
+    <dimen name="tv_text_display">44sp</dimen>
+    <dimen name="tv_text_title">30sp</dimen>
+    <dimen name="tv_text_headline">24sp</dimen>
+    <dimen name="tv_text_body">20sp</dimen>
+    <dimen name="tv_text_label">18sp</dimen>
+    <dimen name="tv_text_caption">16sp</dimen>
+    <dimen name="tv_text_overline">14sp</dimen>
+
+    <!-- Spacing -->
+    <dimen name="tv_space_xs">4dp</dimen>
+    <dimen name="tv_space_s">8dp</dimen>
+    <dimen name="tv_space_m">16dp</dimen>
+    <dimen name="tv_space_l">24dp</dimen>
+    <dimen name="tv_space_xl">32dp</dimen>
+
+    <!-- Corners -->
+    <dimen name="tv_radius_s">10dp</dimen>
+    <dimen name="tv_radius_m">16dp</dimen>
+    <dimen name="tv_radius_l">24dp</dimen>
+
+    <!-- Controls -->
+    <dimen name="tv_button_height">56dp</dimen>
+    <dimen name="tv_button_primary_height">72dp</dimen>
+    <dimen name="tv_row_height">92dp</dimen>
+    <dimen name="tv_rail_width">250dp</dimen>
+    <dimen name="tv_icon">28dp</dimen>
+    <dimen name="tv_icon_large">44dp</dimen>
+    <dimen name="tv_status_badge">136dp</dimen>
+    <dimen name="tv_tile_badge">52dp</dimen>
+    <dimen name="tv_halo">4dp</dimen>
+    <dimen name="tv_status_stroke">5dp</dimen>
+    <dimen name="tv_dialog_width">560dp</dimen>
+    <dimen name="tv_outline_width">1dp</dimen>
+
+    <!-- Motion -->
+    <integer name="tv_anim_focus">110</integer>
+    <integer name="tv_anim_screen">160</integer>
+    <integer name="tv_anim_status">220</integer>
+    <integer name="tv_anim_pulse">750</integer>
+</resources>

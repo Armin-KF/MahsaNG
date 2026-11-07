@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- On television the whole app, including screens that keep their phone layouts, runs on the TV design tokens. -->
+<resources>
+    <style name="AppThemeDayNight" parent="Theme.AppCompat">
+        <item name="viewInflaterClass">com.v2ray.ang.util.SafeAppCompatViewInflater</item>
+        <item name="colorPrimary">@color/tv_surface_1</item>
+        <item name="colorPrimaryDark">@color/tv_bg</item>
+        <item name="colorAccent">@color/tv_accent</item>
+        <item name="colorControlNormal">@color/tv_text_secondary_raw</item>
+        <item name="colorControlHighlight">@color/tv_outline</item>
+        <item name="colorMainBg">@color/tv_bg</item>
+        <item name="colorMainText">@color/tv_text_primary_raw</item>
+        <item name="android:windowBackground">@drawable/tv_bg_window</item>
+        <item name="android:fontFamily">@font/manrope</item>
+        <item name="android:statusBarColor">@color/tv_bg</item>
+        <item name="android:navigationBarColor">@color/tv_bg</item>
+        <item name="android:textColorPrimary">@color/tv_text_primary_raw</item>
+        <item name="android:textColorSecondary">@color/tv_text_secondary_raw</item>
+        <item name="actionBarStyle">@style/Tv.ActionBar</item>
+        <item name="android:windowAnimationStyle">@style/Tv.ScreenAnimation</item>
+        <item name="alertDialogTheme">@style/Tv.DialogTheme</item>
+        <item name="materialAlertDialogTheme">@style/Tv.DialogTheme</item>
+        <item name="android:selectableItemBackground">@drawable/tv_bg_list_item</item>
+        <item name="selectableItemBackground">@drawable/tv_bg_list_item</item>
+        <item name="actionBarItemBackground">@drawable/tv_bg_list_item</item>
+        <item name="android:actionBarItemBackground">@drawable/tv_bg_list_item</item>
+        <item name="android:textAppearanceListItem">@style/Tv.ListItemText</item>
+        <item name="textAppearanceListItem">@style/Tv.ListItemText</item>
+        <item name="android:textAppearanceListItemSecondary">@style/Tv.ListItemText.Secondary</item>
+        <item name="textAppearanceListItemSecondary">@style/Tv.ListItemText.Secondary</item>
+        <item name="android:textAppearanceListItemSmall">@style/Tv.ListItemText</item>
+        <item name="textAppearanceListItemSmall">@style/Tv.ListItemText</item>
+        <item name="listPreferredItemHeightSmall">@dimen/tv_button_height</item>
+        <item name="android:listPreferredItemHeightSmall">@dimen/tv_button_height</item>
+        <item name="editTextStyle">@style/Tv.EditText</item>
+        <item name="android:editTextStyle">@style/Tv.EditText</item>
+        <item name="spinnerStyle">@style/Tv.Spinner</item>
+        <item name="android:spinnerStyle">@style/Tv.Spinner</item>
+        <item name="buttonStyle">@style/Tv.Button.Form</item>
+        <item name="android:buttonStyle">@style/Tv.Button.Form</item>
+    </style>
+</resources>

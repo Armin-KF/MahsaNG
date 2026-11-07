@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated scale of tv_tokens.xml for TVs reporting a large dp canvas (e.g. 1080p at 240dpi, 4K at 320dpi). -->
+<resources>
+    <dimen name="tv_safe_h">96dp</dimen>
+    <dimen name="tv_safe_v">54dp</dimen>
+    <dimen name="tv_text_display">88sp</dimen>
+    <dimen name="tv_text_title">60sp</dimen>
+    <dimen name="tv_text_headline">48sp</dimen>
+    <dimen name="tv_text_body">40sp</dimen>
+    <dimen name="tv_text_label">36sp</dimen>
+    <dimen name="tv_text_caption">32sp</dimen>
+    <dimen name="tv_text_overline">28sp</dimen>
+    <dimen name="tv_space_xs">8dp</dimen>
+    <dimen name="tv_space_s">16dp</dimen>
+    <dimen name="tv_space_m">32dp</dimen>
+    <dimen name="tv_space_l">48dp</dimen>
+    <dimen name="tv_space_xl">64dp</dimen>
+    <dimen name="tv_radius_s">20dp</dimen>
+    <dimen name="tv_radius_m">32dp</dimen>
+    <dimen name="tv_radius_l">48dp</dimen>
+    <dimen name="tv_button_height">112dp</dimen>
+    <dimen name="tv_button_primary_height">144dp</dimen>
+    <dimen name="tv_row_height">184dp</dimen>
+    <dimen name="tv_rail_width">500dp</dimen>
+    <dimen name="tv_icon">56dp</dimen>
+    <dimen name="tv_icon_large">88dp</dimen>
+    <dimen name="tv_status_badge">272dp</dimen>
+    <dimen name="tv_tile_badge">104dp</dimen>
+    <dimen name="tv_halo">8dp</dimen>
+    <dimen name="tv_status_stroke">10dp</dimen>
+    <dimen name="tv_dialog_width">1120dp</dimen>
+    <dimen name="tv_outline_width">2dp</dimen>
+</resources>

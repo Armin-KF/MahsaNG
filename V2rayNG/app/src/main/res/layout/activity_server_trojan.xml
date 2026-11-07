@@ -101,7 +101,6 @@
 
         <include layout="@layout/layout_transport"  />
         <include layout="@layout/tls_layout"  />
-        <include layout="@layout/gfw_fragment_layout"  />
 
         <LinearLayout
             android:layout_width="match_parent"

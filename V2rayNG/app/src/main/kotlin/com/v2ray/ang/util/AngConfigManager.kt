@@ -24,7 +24,6 @@ import com.v2ray.ang.R
 import com.v2ray.ang.dto.*
 import com.v2ray.ang.dto.V2rayConfig.Companion.DEFAULT_SECURITY
 import com.v2ray.ang.dto.V2rayConfig.Companion.TLS
-import com.v2ray.ang.gfwknocker.my_preference_storage
 import com.v2ray.ang.util.MmkvManager.KEY_SELECTED_SERVER
 import java.net.URI
 import java.util.*

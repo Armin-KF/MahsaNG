@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" android:enterFadeDuration="@integer/tv_anim_focus" android:exitFadeDuration="@integer/tv_anim_focus">
+    <item android:state_focused="true">
+        <shape><solid android:color="@color/tv_focus_fill" /><corners android:radius="@dimen/tv_radius_s" /></shape>
+    </item>
+    <item android:state_activated="true">
+        <shape><solid android:color="@color/tv_surface_2" /><corners android:radius="@dimen/tv_radius_s" /></shape>
+    </item>
+    <item>
+        <shape><solid android:color="@android:color/transparent" /><corners android:radius="@dimen/tv_radius_s" /></shape>
+    </item>
+</selector>

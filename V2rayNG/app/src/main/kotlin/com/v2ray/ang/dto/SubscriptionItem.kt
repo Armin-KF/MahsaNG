@@ -4,5 +4,7 @@ data class SubscriptionItem(
         var remarks: String = "",
         var url: String = "",
         var enabled: Boolean = true,
-        val addedTime: Long = System.currentTimeMillis()) {
+        val addedTime: Long = System.currentTimeMillis(),
+        var lastUpdated: Long = 0L,
+        var lastError: String = "") {
 }

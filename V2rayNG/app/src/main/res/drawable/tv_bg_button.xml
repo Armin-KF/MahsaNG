@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android" android:enterFadeDuration="@integer/tv_anim_focus" android:exitFadeDuration="@integer/tv_anim_focus">
+    <item android:state_focused="true">
+        <layer-list>
+            <item><shape><solid android:color="@color/tv_halo" /><corners android:radius="@dimen/tv_radius_l" /></shape></item>
+            <item android:bottom="@dimen/tv_halo" android:left="@dimen/tv_halo" android:right="@dimen/tv_halo" android:top="@dimen/tv_halo">
+                <shape><solid android:color="@color/tv_focus_fill" /><corners android:radius="@dimen/tv_radius_m" /></shape>
+            </item>
+        </layer-list>
+    </item>
+    <item>
+        <inset android:inset="@dimen/tv_halo">
+            <shape>
+                <gradient android:angle="270" android:startColor="@color/tv_surface_2" android:endColor="@color/tv_surface_top" />
+                <stroke android:width="@dimen/tv_outline_width" android:color="@color/tv_hairline" />
+                <corners android:radius="@dimen/tv_radius_m" />
+            </shape>
+        </inset>
+    </item>
+</selector>

@@ -95,15 +95,6 @@ class ServerActivity : BaseActivity() {
     }
 
 
-    private val fragment_array: Array<out String> by lazy {
-        resources.getStringArray(R.array.gfw_fragment)
-    }
-
-    private val mux_array: Array<out String> by lazy {
-        resources.getStringArray(R.array.gfw_mux)
-    }
-
-
 
     // Kotlin synthetics was used, but since it is removed in 1.8. We switch to old manual approach.
     // We don't use AndroidViewBinding because, it is better to share similar logics for different
@@ -138,26 +129,7 @@ class ServerActivity : BaseActivity() {
     private val container_short_id: LinearLayout? by lazy { findViewById(R.id.l7) }
     private val et_spider_x: EditText? by lazy { findViewById(R.id.et_spider_x) }
 
-    private val container_ech: LinearLayout? by lazy { findViewById(R.id.l_ech) }
-    private val et_echConfigList: EditText? by lazy { findViewById(R.id.et_echConfigList) }
-    private val et_echServerKeys: EditText? by lazy { findViewById(R.id.et_echServerKeys) }
-    private val et_echForceQuery: EditText? by lazy { findViewById(R.id.et_echForceQuery) }
 
-    private val sp_frag_array: Spinner? by lazy { findViewById(R.id.sp_frag_array) }
-    private val sp_mux_array: Spinner? by lazy { findViewById(R.id.sp_mux_array) }
-    private val container_tls_frag: LinearLayout? by lazy { findViewById(R.id.l_tls_frag) }
-    private val container_nontls_frag: LinearLayout? by lazy { findViewById(R.id.l_nontls_frag) }
-    private val container_generic_frag: LinearLayout? by lazy { findViewById(R.id.l_generic_frag) }
-    private val container_mux: LinearLayout? by lazy { findViewById(R.id.l_mux_concurrency) }
-    //private val et_frag_packets: EditText? by lazy { findViewById(R.id.et_frag_packets) }
-    private val et_frag_length: EditText? by lazy { findViewById(R.id.et_frag_length) }
-    private val et_frag_interval: EditText? by lazy { findViewById(R.id.et_frag_interval) }
-    //private val et_fakehost_packets: EditText? by lazy { findViewById(R.id.et_fakehost_packets) }
-    private val et_fakehost_domain: EditText? by lazy { findViewById(R.id.et_fakehost_domain) }
-    private val et_generic_packets: EditText? by lazy { findViewById(R.id.et_generic_packets) }
-    private val et_generic_length: EditText? by lazy { findViewById(R.id.et_generic_length) }
-    private val et_generic_interval: EditText? by lazy { findViewById(R.id.et_generic_interval) }
-    private val et_mux_concurrency: EditText? by lazy { findViewById(R.id.et_mux_concurrency) }
 
     private val container_spider_x: LinearLayout? by lazy { findViewById(R.id.l8) }
     private val et_reserved1: EditText? by lazy { findViewById(R.id.et_reserved1) }
@@ -172,9 +144,6 @@ class ServerActivity : BaseActivity() {
     private val et_wnoisedelay: EditText? by lazy { findViewById(R.id.et_wnoisedelay) }
     private val et_wpayloadsize: EditText? by lazy { findViewById(R.id.et_wpayloadsize) }
 
-    private val et_obfs_password: EditText? by lazy { findViewById(R.id.et_obfs_password) }
-    private val et_port_hop: EditText? by lazy { findViewById(R.id.et_port_hop) }
-    private val et_port_hop_interval: EditText? by lazy { findViewById(R.id.et_port_hop_interval) }
     private val et_pinsha256: EditText? by lazy { findViewById(R.id.et_pinsha256) }
     private val et_extra: EditText? by lazy { findViewById(R.id.et_extra) }
     private val layout_extra: LinearLayout? by lazy { findViewById(R.id.layout_extra) }
@@ -185,26 +154,15 @@ class ServerActivity : BaseActivity() {
         title = getString(R.string.title_server)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-            if (!Utils.getDarkModeStatus(this)) {
-                WindowCompat.getInsetsController(window, window.decorView).apply {
-                    isAppearanceLightStatusBars = true
-                }
-            }
-        }
-
         val config = MmkvManager.decodeServerConfig(editGuid)
         when (config?.configType ?: createConfigType) {
             EConfigType.VMESS -> setContentView(R.layout.activity_server_vmess)
             EConfigType.CUSTOM -> return
             EConfigType.SHADOWSOCKS -> setContentView(R.layout.activity_server_shadowsocks)
             EConfigType.SOCKS -> setContentView(R.layout.activity_server_socks)
-            EConfigType.HTTP -> setContentView(R.layout.activity_server_socks)
             EConfigType.VLESS -> setContentView(R.layout.activity_server_vless)
-            EConfigType.MVLESS -> setContentView(R.layout.activity_server_mvless)
             EConfigType.TROJAN -> setContentView(R.layout.activity_server_trojan)
             EConfigType.WIREGUARD -> setContentView(R.layout.activity_server_wireguard)
-            EConfigType.HYSTERIA2 -> setContentView(R.layout.activity_server_hysteria2)
         }
         sp_network?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -263,7 +221,6 @@ class ServerActivity : BaseActivity() {
                     container_sni?.visibility = View.GONE
                     container_fingerprint?.visibility = View.GONE
                     container_alpn?.visibility = View.GONE
-                    container_ech?.visibility = View.GONE
                     container_allow_insecure?.visibility = View.GONE
                     container_public_key?.visibility = View.GONE
                     container_short_id?.visibility = View.GONE
@@ -272,7 +229,6 @@ class ServerActivity : BaseActivity() {
                     container_sni?.visibility = View.VISIBLE
                     container_fingerprint?.visibility = View.VISIBLE
                     container_alpn?.visibility = View.VISIBLE
-                    container_ech?.visibility = View.VISIBLE
                     if (streamSecuritys[position] == TLS) {
                         container_allow_insecure?.visibility = View.VISIBLE
                         container_public_key?.visibility = View.GONE
@@ -285,61 +241,6 @@ class ServerActivity : BaseActivity() {
                         container_short_id?.visibility = View.VISIBLE
                         container_spider_x?.visibility = View.VISIBLE
                     }
-                }
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                // do nothing
-            }
-        }
-
-
-        sp_frag_array?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                if (position==0) {
-                    container_tls_frag?.visibility = View.GONE
-                    container_nontls_frag?.visibility = View.GONE
-                    container_generic_frag?.visibility = View.GONE
-                } else if(position==1) {
-                    container_tls_frag?.visibility = View.VISIBLE
-                    container_nontls_frag?.visibility = View.GONE
-                    container_generic_frag?.visibility = View.GONE
-                }else if(position==2){
-                    container_tls_frag?.visibility = View.GONE
-                    container_nontls_frag?.visibility = View.VISIBLE
-                    container_generic_frag?.visibility = View.GONE
-                }else{
-                    container_tls_frag?.visibility = View.GONE
-                    container_nontls_frag?.visibility = View.GONE
-                    container_generic_frag?.visibility = View.VISIBLE
-                }
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                // do nothing
-            }
-        }
-
-
-
-        sp_mux_array?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                if (position==0) {
-                    container_mux?.visibility = View.GONE
-                } else if(position==1) {
-                    container_mux?.visibility = View.GONE
-                }else{
-                    container_mux?.visibility = View.VISIBLE
                 }
             }
 
@@ -369,10 +270,10 @@ class ServerActivity : BaseActivity() {
         et_id.text = Utils.getEditable(outbound.getPassword().orEmpty())
         et_alterId?.text =
             Utils.getEditable(outbound.settings?.vnext?.get(0)?.users?.get(0)?.alterId.toString())
-        if (config.configType == EConfigType.SOCKS || config.configType == EConfigType.HTTP) {
+        if (config.configType == EConfigType.SOCKS) {
             et_security?.text =
                 Utils.getEditable(outbound.settings?.servers?.get(0)?.users?.get(0)?.user.orEmpty())
-        } else if (config.configType == EConfigType.VLESS || config.configType == EConfigType.MVLESS) {
+        } else if (config.configType == EConfigType.VLESS) {
             et_security?.text = Utils.getEditable(outbound.getSecurityEncryption().orEmpty())
             val flow = Utils.arrayFind(
                 flows,
@@ -441,47 +342,6 @@ class ServerActivity : BaseActivity() {
                 et_wpayloadsize?.text = Utils.getEditable(outbound.settings?.wpayloadsize.orEmpty())
             }
 
-        }else if (config.configType == EConfigType.HYSTERIA2) {
-            et_obfs_password?.text = Utils.getEditable(outbound.settings?.obfsPassword.orEmpty())
-            et_port_hop?.text = Utils.getEditable(outbound.settings?.portHopping.orEmpty())
-            et_port_hop_interval?.text = Utils.getEditable(outbound.settings?.portHoppingInterval.orEmpty())
-            et_pinsha256?.text = Utils.getEditable(outbound.settings?.pinSHA256.orEmpty())
-        }
-
-
-        // ------------------fragment & mux-------------
-        if (config.configType == EConfigType.VLESS ||
-            config.configType == EConfigType.MVLESS ||
-            config.configType == EConfigType.TROJAN ||
-            config.configType == EConfigType.VMESS) {
-
-            val f1 = Utils.arrayFind(fragment_array, config.outboundBean?.settings?.fragment?.status.orEmpty())
-            if(f1>=0) {
-                sp_frag_array?.setSelection(f1)
-                if(f1==1){
-                    //et_frag_packets?.text = Utils.getEditable(config.outboundBean?.settings?.fragment?.packets.orEmpty())
-                    et_frag_length?.text = Utils.getEditable(config.outboundBean?.settings?.fragment?.length.orEmpty())
-                    et_frag_interval?.text = Utils.getEditable(config.outboundBean?.settings?.fragment?.interval.orEmpty())
-                }else if(f1==2){
-                    //et_fakehost_packets?.text = Utils.getEditable(config.outboundBean?.settings?.fragment?.packets.orEmpty())
-                    et_fakehost_domain?.text = Utils.getEditable(config.outboundBean?.settings?.fragment?.host1_domain.orEmpty())
-                }else if(f1==3){
-                    et_generic_packets?.text = Utils.getEditable(config.outboundBean?.settings?.fragment?.packets.orEmpty())
-                    et_generic_length?.text = Utils.getEditable(config.outboundBean?.settings?.fragment?.length.orEmpty())
-                    et_generic_interval?.text = Utils.getEditable(config.outboundBean?.settings?.fragment?.interval.orEmpty())
-                }
-            }
-
-
-            val g1 = Utils.arrayFind(mux_array, config.outboundBean?.mux?.status.orEmpty())
-            if(g1>=0) {
-                sp_mux_array?.setSelection(g1)
-                if(g1==2){
-                    val cun = config.outboundBean?.mux?.concurrency ?: 8
-                    et_mux_concurrency?.text = Utils.getEditable(cun.toString())
-                }
-            }
-
         }
 
         val securityEncryptions =
@@ -514,9 +374,6 @@ class ServerActivity : BaseActivity() {
                 }
                 if (streamSetting.tlsSettings != null) {
 
-                    et_echConfigList?.text = Utils.getEditable(tlsSetting.echConfigList.orEmpty())
-                    et_echServerKeys?.text = Utils.getEditable(tlsSetting.echServerKeys.orEmpty())
-                    et_echForceQuery?.text = Utils.getEditable(tlsSetting.echForceQuery.orEmpty())
 
                     container_allow_insecure?.visibility = View.VISIBLE
                     val allowinsecure =
@@ -583,13 +440,6 @@ class ServerActivity : BaseActivity() {
             Utils.getEditable("${WIREGUARD_LOCAL_ADDRESS_V4},${WIREGUARD_LOCAL_ADDRESS_V6}")
         et_local_mtu?.text = Utils.getEditable(WIREGUARD_LOCAL_MTU)
 
-        et_frag_length?.text = Utils.getEditable("")
-        et_frag_interval?.text = Utils.getEditable("")
-        et_fakehost_domain?.text = Utils.getEditable("")
-        et_generic_packets?.text = Utils.getEditable("1-1")
-        et_generic_length?.text = Utils.getEditable("")
-        et_generic_interval?.text = Utils.getEditable("")
-        et_mux_concurrency?.text = Utils.getEditable("")
         return true
     }
 
@@ -610,20 +460,15 @@ class ServerActivity : BaseActivity() {
 
         val config = MmkvManager.decodeServerConfig(editGuid) ?: ServerConfig.create(createConfigType)
 
-        if (config.configType != EConfigType.HYSTERIA2) {
-            if ( (port <= 0) || (port >= 65536) ) {
+        if ( (port <= 0) || (port >= 65536) ) {
                 toast(R.string.server_lab_port)
                 return false
             }
-        }
-
-        port = Utils.validate_port(port)
 
 
-        if (config.configType != EConfigType.SOCKS && config.configType != EConfigType.HTTP && TextUtils.isEmpty(et_id.text.toString())) {
+        if (config.configType != EConfigType.SOCKS && TextUtils.isEmpty(et_id.text.toString())) {
             if (config.configType == EConfigType.TROJAN
-                || config.configType == EConfigType.SHADOWSOCKS
-                || config.configType == EConfigType.HYSTERIA2 ) {
+                || config.configType == EConfigType.SHADOWSOCKS) {
                 toast(R.string.server_lab_id3)
             } else {
                 toast(R.string.server_lab_id)
@@ -663,97 +508,6 @@ class ServerActivity : BaseActivity() {
             config.subscriptionId = subscriptionId!!
         }
 
-        if (config.configType == EConfigType.HYSTERIA2) {
-            config.outboundBean?.settings?.obfsPassword = et_obfs_password?.text?.toString()
-            config.outboundBean?.settings?.portHopping = et_port_hop?.text?.toString()
-            config.outboundBean?.settings?.portHoppingInterval = et_port_hop_interval?.text?.toString()
-            config.outboundBean?.settings?.pinSHA256 = et_pinsha256?.text?.toString()
-        }
-
-
-        if (config.configType == EConfigType.VLESS || config.configType == EConfigType.MVLESS ||
-                config.configType == EConfigType.TROJAN || config.configType == EConfigType.VMESS) {
-
-
-            val fpos = sp_frag_array?.selectedItemPosition ?: 0
-            if(fpos==0){
-                config.outboundBean?.settings?.fragment = null
-            }else if(fpos==1){
-                var L7 = et_frag_length?.text?.toString()?.trim()
-                var I7 = et_frag_interval?.text?.toString()?.trim()
-                if(L7.isNullOrEmpty()){
-                    L7 = "10-20"
-                }
-                if(I7.isNullOrEmpty()){
-                    I7 = "10-20"
-                }
-                if(!Utils.fragment_param_check(L7)){
-                    toast("invalid fragment length")
-                    return false
-                }
-                if(!Utils.fragment_param_check(I7)){
-                    toast("invalid fragment interval")
-                    return false
-                }
-                config.outboundBean?.settings?.populateFragment(packets = "tlshello", length = L7, interval = I7)
-            }else if(fpos==2){
-                val D7 = et_fakehost_domain?.text?.toString()?.trim() ?: ""
-                config.outboundBean?.settings?.populateFragment(packets = "fakehost", fakehost_domain = D7)
-            }else{
-                var P8 = et_generic_packets?.text?.toString()?.trim()
-                var L8 = et_generic_length?.text?.toString()?.trim()
-                var I8 = et_generic_interval?.text?.toString()?.trim()
-                if(P8.isNullOrEmpty()){
-                    P8 = "1-1"
-                }
-                if(L8.isNullOrEmpty()){
-                    L8 = "3-5"
-                }
-                if(I8.isNullOrEmpty()){
-                    I8 = "5-10"
-                }
-                if(!Utils.fragment_param_check(P8)){
-                    toast("invalid generic packet")
-                    return false
-                }
-                if(!Utils.fragment_param_check(L8)){
-                    toast("invalid fragment length")
-                    return false
-                }
-                if(!Utils.fragment_param_check(I8)){
-                    toast("invalid fragment interval")
-                    return false
-                }
-                config.outboundBean?.settings?.populateFragment(packets = P8, length = L8, interval = I8)
-            }
-
-
-            val mpos = sp_mux_array?.selectedItemPosition ?: 0
-            if(mpos==0){
-                config.outboundBean?.populateMux(stat = "")
-            }else if(mpos==1){
-                config.outboundBean?.populateMux(stat = "OFF")
-            }else if(mpos==2){
-                var m81 = et_mux_concurrency?.text?.toString()?.trim()
-                if(m81.isNullOrEmpty()){
-                    m81 = "8"
-                }
-                val m8 = Utils.parseInt(m81)
-                if(m8<=0){
-                    toast("concurrency must > 0")
-                    return false
-                }
-                if( (config.configType==EConfigType.VLESS) || (config.configType==EConfigType.MVLESS) ) {
-                    if(config.outboundBean?.settings?.vnext?.get(0)?.users?.get(0)?.flow?.isNotEmpty() == true) {
-                        toast("mux and flow cant be set at the same time")
-                        return false
-                    }
-                }
-                config.outboundBean?.populateMux(stat = "ON", concr = m8)
-            }
-
-        }
-
         MmkvManager.encodeServerConfig(editGuid, config)
         toast(R.string.toast_success)
         finish()
@@ -766,12 +520,12 @@ class ServerActivity : BaseActivity() {
         config: ServerConfig
     ) {
         vnext.address = et_address.text.toString().trim()
-        vnext.port = Utils.validate_port(port)
+        vnext.port = port
         vnext.users[0].id = et_id.text.toString().trim()
         if (config.configType == EConfigType.VMESS) {
             vnext.users[0].alterId = Utils.parseInt(et_alterId?.text.toString())
             vnext.users[0].security = securitys[sp_security?.selectedItemPosition ?: 0]
-        } else if (config.configType == EConfigType.VLESS || config.configType == EConfigType.MVLESS) {
+        } else if (config.configType == EConfigType.VLESS) {
             vnext.users[0].encryption = et_security?.text.toString().trim()
             vnext.users[0].flow = flows[sp_flow?.selectedItemPosition ?: 0]
         }
@@ -783,11 +537,11 @@ class ServerActivity : BaseActivity() {
         config: ServerConfig
     ) {
         server.address = et_address.text.toString().trim()
-        server.port = Utils.validate_port(port)
+        server.port = port
         if (config.configType == EConfigType.SHADOWSOCKS) {
             server.password = et_id.text.toString().trim()
             server.method = shadowsocksSecuritys[sp_security?.selectedItemPosition ?: 0]
-        } else if (config.configType == EConfigType.SOCKS || config.configType == EConfigType.HTTP) {
+        } else if (config.configType == EConfigType.SOCKS) {
             if (TextUtils.isEmpty(et_security?.text) && TextUtils.isEmpty(et_id.text)) {
                 server.users = null
             } else {
@@ -797,7 +551,7 @@ class ServerActivity : BaseActivity() {
                 socksUsersBean.pass = et_id.text.toString().trim()
                 server.users = listOf(socksUsersBean)
             }
-        } else if (config.configType == EConfigType.TROJAN || config.configType == EConfigType.HYSTERIA2) {
+        } else if (config.configType == EConfigType.TROJAN) {
             server.password = et_id.text.toString().trim()
         }
     }
@@ -807,7 +561,7 @@ class ServerActivity : BaseActivity() {
         wireguard.peers?.get(0)?.publicKey = et_public_key?.text.toString().trim()
         wireguard.peers?.get(0)?.preSharedKey = et_preshared_key?.text.toString().trim()
         wireguard.peers?.get(0)?.endpoint =
-            getIpv6Address(et_address.text.toString().trim()) + ":" + Utils.validate_port(port)
+            getIpv6Address(et_address.text.toString().trim()) + ":" + port
         val reserved1 = Utils.parseInt(et_reserved1?.text.toString())
         val reserved2 = Utils.parseInt(et_reserved2?.text.toString())
         val reserved3 = Utils.parseInt(et_reserved3?.text.toString())
@@ -859,9 +613,6 @@ class ServerActivity : BaseActivity() {
         val shortId = et_short_id?.text?.toString()
         val spiderX = et_spider_x?.text?.toString()
 
-        val echConfigList = et_echConfigList?.text?.toString()
-        val echServerKeys = et_echServerKeys?.text?.toString()
-        val echForceQuery = et_echForceQuery?.text?.toString()
 
         val allowInsecure = if (allowInsecureField == null || allowinsecures[allowInsecureField].isBlank()) {
             !(settingsStorage?.decodeBool(PREF_ALLOW_INSECURE) ?: false)
@@ -878,9 +629,6 @@ class ServerActivity : BaseActivity() {
             publicKey = publicKey,
             shortId = shortId,
             spiderX = spiderX,
-            echConfigList = echConfigList,
-            echServerKeys = echServerKeys,
-            echForceQuery = echForceQuery
         )
 
     }

@@ -30,21 +30,6 @@
             android:background="@color/color_ads_background"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/report_flag_button"
-                android:layout_width="@dimen/png_height"
-                android:layout_height="@dimen/png_height"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="3dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:layout_gravity="center"
-                android:src="@drawable/report_flag1"
-                app:tint="?attr/colorMainText" />
-
-
             <TextView
                 android:id="@+id/textView_ADS_main1"
                 android:layout_width="wrap_content"
@@ -229,7 +214,7 @@
                     android:contentDescription="M connect button"
                     android:focusable="true"
                     android:nextFocusLeft="@+id/layout_test"
-                    android:src="@drawable/ic_stat_name_m2"
+                    android:src="@drawable/ic_stat_name"
                     app:layout_anchorGravity="bottom|right|end" />
 
 

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/tv_safe_h"
+    android:paddingTop="@dimen/tv_safe_v"
+    android:paddingEnd="@dimen/tv_safe_h"
+    android:paddingBottom="@dimen/tv_safe_v">
+
+    <LinearLayout
+        android:layout_width="@dimen/tv_rail_width"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/Tv.Text.Overline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/tv_space_m"
+            android:text="@string/app_name"
+            android:textAlignment="viewStart" />
+
+        <TextView
+            android:id="@+id/screen_title"
+            style="@style/Tv.Text.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="2"
+            android:paddingStart="@dimen/tv_space_m" />
+
+        <TextView
+            android:id="@+id/screen_subtitle"
+            style="@style/Tv.Text.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/tv_space_m"
+            android:paddingStart="@dimen/tv_space_m" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/rail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/tv_space_xs"
+                android:paddingBottom="@dimen/tv_space_xs" />
+        </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/list_area"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/tv_space_l"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/screen_hint"
+            style="@style/Tv.Text.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/tv_space_s"
+            android:gravity="end" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingStart="@dimen/tv_space_s"
+            android:paddingTop="@dimen/tv_space_s"
+            android:paddingEnd="@dimen/tv_space_s"
+            android:paddingBottom="@dimen/tv_space_s"
+            android:scrollbars="none" />
+
+        <LinearLayout
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipChildren="false"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/empty_title"
+                style="@style/Tv.Text.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/empty_hint"
+                style="@style/Tv.Text.Secondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/tv_space_s"
+                android:gravity="center" />
+
+            <Button
+                android:id="@+id/empty_action"
+                style="@style/Tv.Button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/tv_space_l" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/tv_space_l"
+        android:layout_weight="1"
+        android:background="@drawable/tv_bg_panel"
+        android:padding="@dimen/tv_space_s"
+        android:visibility="gone" />
+</LinearLayout>

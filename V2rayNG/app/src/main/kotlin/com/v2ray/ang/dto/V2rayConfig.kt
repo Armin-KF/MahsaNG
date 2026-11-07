@@ -105,6 +105,10 @@ data class V2rayConfig(
             val peers: List<WireGuardBean>? = null,
             var reserved: List<Int>? = null,
             var mtu: Int? = null,
+            var wnoise: String? = null,
+            var wnoisecount: String? = null,
+            var wnoisedelay: String? = null,
+            var wpayloadsize: String? = null,
             var obfsPassword: String? = null,
         ) {
 
@@ -159,7 +163,9 @@ data class V2rayConfig(
 
             data class WireGuardBean(
                 var publicKey: String = "",
-                var endpoint: String = ""
+                var preSharedKey: String = "",
+                var endpoint: String = "",
+                var keepAlive: Int? = null
             )
         }
 
@@ -437,9 +443,7 @@ data class V2rayConfig(
                 return settings?.vnext?.get(0)?.address
             } else if (protocol.equals(EConfigType.SHADOWSOCKS.name, true)
                 || protocol.equals(EConfigType.SOCKS.name, true)
-                || protocol.equals(EConfigType.HTTP.name, true)
                 || protocol.equals(EConfigType.TROJAN.name, true)
-                || protocol.equals(EConfigType.HYSTERIA2.name, true)
             ) {
                 return settings?.servers?.get(0)?.address
             } else if (protocol.equals(EConfigType.WIREGUARD.name, true)) {
@@ -455,9 +459,7 @@ data class V2rayConfig(
                 return settings?.vnext?.get(0)?.port
             } else if (protocol.equals(EConfigType.SHADOWSOCKS.name, true)
                 || protocol.equals(EConfigType.SOCKS.name, true)
-                || protocol.equals(EConfigType.HTTP.name, true)
                 || protocol.equals(EConfigType.TROJAN.name, true)
-                || protocol.equals(EConfigType.HYSTERIA2.name, true)
             ) {
                 return settings?.servers?.get(0)?.port
             } else if (protocol.equals(EConfigType.WIREGUARD.name, true)) {
@@ -479,11 +481,9 @@ data class V2rayConfig(
                 return settings?.vnext?.get(0)?.users?.get(0)?.id
             } else if (protocol.equals(EConfigType.SHADOWSOCKS.name, true)
                 || protocol.equals(EConfigType.TROJAN.name, true)
-                || protocol.equals(EConfigType.HYSTERIA2.name, true)
             ) {
                 return settings?.servers?.get(0)?.password
             } else if (protocol.equals(EConfigType.SOCKS.name, true)
-                || protocol.equals(EConfigType.HTTP.name, true)
             ) {
                 return settings?.servers?.get(0)?.users?.get(0)?.pass
             } else if (protocol.equals(EConfigType.WIREGUARD.name, true)) {

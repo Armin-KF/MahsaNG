@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/tv_row_height"
+    android:layout_marginBottom="@dimen/tv_space_s"
+    android:clipChildren="false"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/row_main"
+        style="@style/Tv.Row"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:duplicateParentState="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/name"
+                android:textAlignment="viewStart"
+                style="@style/Tv.Text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:duplicateParentState="true"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1" />
+
+            <TextView
+                android:id="@+id/state"
+                style="@style/Tv.Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/tv_space_m"
+                android:duplicateParentState="true"
+                android:textSize="@dimen/tv_text_caption" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/meta"
+            style="@style/Tv.Text.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/tv_space_xs"
+            android:duplicateParentState="true"
+            android:ellipsize="end"
+            android:maxLines="1" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/btn_refresh"
+        style="@style/Tv.RowAction"
+        android:layout_marginStart="@dimen/tv_space_s"
+        android:contentDescription="@string/tv_option_refresh"
+        android:src="@drawable/ic_tv_refresh" />
+</LinearLayout>

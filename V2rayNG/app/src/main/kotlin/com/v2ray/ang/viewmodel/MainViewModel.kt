@@ -38,14 +38,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val tcpingTestScope by lazy { CoroutineScope(Dispatchers.IO) }
 
+    private var listening = false
+
     fun startListenBroadcast() {
+        listening = true
         isRunning.value = false
         getApplication<AngApplication>().registerReceiver(mMsgReceiver, IntentFilter(AppConfig.BROADCAST_ACTION_ACTIVITY))
         MessageUtil.sendMsg2Service(getApplication(), AppConfig.MSG_REGISTER_CLIENT, "")
     }
 
     override fun onCleared() {
-        getApplication<AngApplication>().unregisterReceiver(mMsgReceiver)
+        if (listening) getApplication<AngApplication>().unregisterReceiver(mMsgReceiver)
         tcpingTestScope.coroutineContext[Job]?.cancelChildren()
         SpeedtestUtil.closeAllTcpSockets()
         Log.i(ANG_PACKAGE, "Main ViewModel is cleared")

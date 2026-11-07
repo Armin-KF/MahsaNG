@@ -2,6 +2,7 @@ package com.v2ray.ang.util
 
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.res.Configuration
 import android.text.Editable
 import android.util.Base64
 import java.util.*
@@ -274,7 +275,12 @@ object Utils {
 
     fun openUri(context: Context, uriString: String) {
         val uri = Uri.parse(uriString)
-        context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+        try {
+            context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+        } catch (e: android.content.ActivityNotFoundException) {
+            // Many TVs ship no browser.
+            context.toast(R.string.toast_failure)
+        }
     }
 
     /**
@@ -356,6 +362,8 @@ object Utils {
     fun getUrlContentWithCustomUserAgent(urlStr: String?): String {
         val url = URL(urlStr)
         val conn = url.openConnection()
+        conn.connectTimeout = 15_000
+        conn.readTimeout = 15_000
         conn.setRequestProperty("Connection", "close")
         conn.setRequestProperty("User-agent", "v2rayNG/${BuildConfig.VERSION_NAME}")
         url.userInfo?.let {
@@ -382,7 +390,8 @@ object Utils {
         }
     }
 
-    fun getIpv6Address(address: String): String {
+    fun getIpv6Address(host: String?): String {
+        val address = host.orEmpty()
         return if (isIpv6Address(address) && !address.contains('[') && !address.contains(']')) {
             String.format("[%s]", address)
         } else {

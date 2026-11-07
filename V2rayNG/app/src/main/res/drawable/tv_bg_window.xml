@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Faint accent light from the top-start corner gives every TV screen depth without competing with content. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item><color android:color="@color/tv_bg" /></item>
+    <item>
+        <shape>
+            <gradient android:centerX="0.1" android:centerY="0" android:endColor="#000B0F12" android:gradientRadius="90%p" android:startColor="#1A2ED3A2" android:type="radial" />
+        </shape>
+    </item>
+</layer-list>
