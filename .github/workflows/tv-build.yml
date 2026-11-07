@@ -14,6 +14,8 @@ env:
   # libv2ray.aar (Mahsa Xray-core) is git-ignored upstream. Pinned to the release the TV build was tested with.
   LIBV2RAY_URL: https://github.com/GFW-knocker/AndroidLibXrayLite/releases/download/v1.26.10-r2/libv2ray.aar
   LIBV2RAY_SHA256: 26ef6f733e6a571ab47124a68f85e56a8d43324e29e57cac7f0b6e3701aaf588
+  # Certificate of the key testers' installs are signed with. A build signed with any other key cannot update them.
+  CERT_SHA256: e91353e8860ea5786711cb01923a1bb7025c12e18a8127686725990bac81842f
 
 jobs:
   build:
@@ -44,6 +46,8 @@ jobs:
           if [ -n "$DEBUG_KEYSTORE_BASE64" ]; then
             mkdir -p ~/.android
             echo "$DEBUG_KEYSTORE_BASE64" | base64 -d > ~/.android/debug.keystore
+            ks=$(keytool -list -v -keystore ~/.android/debug.keystore -storepass android | sed -n 's/.*SHA256: //p' | tr -d ':' | tr 'A-F' 'a-f')
+            echo "::notice::The keystore in the secret has certificate $ks"
           else
             echo "::warning::DEBUG_KEYSTORE_BASE64 is not set; this APK cannot update earlier installs."
           fi
@@ -57,6 +61,12 @@ jobs:
           for abi in universal arm64-v8a armeabi-v7a; do
             cp "app/build/outputs/apk/dev/debug/v2rayNG_1.8.5-dev_${abi}.apk" "../dist/MahsaNG-TV-${GITHUB_REF_NAME//\//-}-${abi}.apk"
           done
+
+      - name: Check the signing key
+        run: |
+          cert=$("$(ls -d "$ANDROID_HOME"/build-tools/* | tail -1)/apksigner" verify --print-certs ../dist/*-universal.apk | sed -n 's/.*SHA-256 digest: //p')
+          echo "::notice::The APK is signed with certificate $cert"
+          [ "$cert" = "$CERT_SHA256" ] || { echo "::error::The APK is not signed with the testers' key ($CERT_SHA256)."; exit 1; }
 
       - uses: actions/upload-artifact@v7
         with:
