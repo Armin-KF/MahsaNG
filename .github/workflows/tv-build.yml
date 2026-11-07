@@ -79,7 +79,9 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         env:
           GH_TOKEN: ${{ github.token }}
+        # Re-pushing a tag replaces that release's APKs.
         run: |
+          gh release upload "$GITHUB_REF_NAME" ../dist/*.apk --clobber ||
           gh release create "$GITHUB_REF_NAME" ../dist/*.apk --target "$GITHUB_SHA" --prerelease \
             --title "TV test build $GITHUB_REF_NAME" \
             --notes "Unofficial Android TV test build. Install the universal APK if unsure. See docs/android-tv.md for what this build includes and leaves out."
