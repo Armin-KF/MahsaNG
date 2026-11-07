@@ -295,13 +295,13 @@ class ConfigImporter(private val activity: AppCompatActivity, private val viewMo
             }
     }
 
-    fun importCustomizeConfig(server: String?) {
+    fun importCustomizeConfig(server: String?, remarks: String? = null) {
         try {
             if (server == null || TextUtils.isEmpty(server)) {
                 activity.toast(R.string.toast_none_data)
                 return
             }
-            viewModel().appendCustomConfigServer(server)
+            if (remarks == null) viewModel().appendCustomConfigServer(server) else viewModel().appendCustomConfigServer(server, remarks)
             viewModel().reloadServerList()
             activity.toast(R.string.toast_success)
         } catch (e: Exception) {

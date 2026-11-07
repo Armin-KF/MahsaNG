@@ -54,6 +54,8 @@
     <string name="tv_hint_rows">OK to select  ·  Right or Menu for options</string>
 
     <string name="tv_add_title">Add configuration</string>
+    <string name="tv_direct">Direct, no server</string>
+    <string name="tv_add_youtube">YouTube &amp; Twitter (no server)</string>
     <string name="tv_add_link">Enter a share link</string>
     <string name="tv_add_link_hint">vless://, vmess://, trojan://, ss://, socks://</string>
     <string name="tv_add_sub_link">Enter a subscription URL</string>

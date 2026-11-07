@@ -70,9 +70,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun appendCustomConfigServer(server: String) {
+    fun appendCustomConfigServer(server: String, remarks: String = System.currentTimeMillis().toString()) {
         val config = ServerConfig.create(EConfigType.CUSTOM)
-        config.remarks = System.currentTimeMillis().toString()
+        config.remarks = remarks
         config.subscriptionId = subscriptionId
         config.fullConfig = Gson().fromJson(server, V2rayConfig::class.java)
         val key = MmkvManager.encodeServerConfig("", config)

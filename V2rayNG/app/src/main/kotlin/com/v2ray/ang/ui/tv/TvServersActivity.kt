@@ -155,6 +155,11 @@ class TvServersActivity : TvRailActivity() {
 
     private fun showAddDialog() {
         val options = mutableListOf(
+            // Mahsa's serverless config: fragments the TLS handshake and connects directly, so it needs no server.
+            TvOption(R.string.tv_add_youtube) {
+                val json = assets.open("ServerLess_TLSFrag_Xray_Config.json").bufferedReader().use { it.readText() }
+                importer.importCustomizeConfig(json, getString(R.string.tv_add_youtube))
+            },
             TvOption(R.string.tv_add_link) {
                 TvDialogs.input(this, R.string.tv_add_link, R.string.tv_add_link_hint) { importer.importBatchConfig(it) }
             },
@@ -231,7 +236,9 @@ class TvServersActivity : TvRailActivity() {
             val outbound = item.config.getProxyOutbound()
             val sub = subStorage?.decodeString(item.config.subscriptionId)
                 ?.takeIf { it.isNotBlank() }?.let { Gson().fromJson(it, SubscriptionItem::class.java).remarks }
-            row.meta.text = listOfNotNull(sub, TvFormat.endpoint(outbound?.getServerAddress(), outbound?.getServerPort()).takeIf { it.isNotEmpty() }).joinToString("  ·  ")
+            val address = if (outbound?.tag == TvFormat.SERVERLESS_TAG) getString(R.string.tv_direct)
+                else TvFormat.endpoint(outbound?.getServerAddress(), outbound?.getServerPort())
+            row.meta.text = listOfNotNull(sub, address.takeIf { it.isNotEmpty() }).joinToString("  ·  ")
 
             val delay = MmkvManager.decodeServerAffiliationInfo(item.guid)?.testDelayMillis ?: 0L
             row.latency.visibility = if (delay == 0L) View.GONE else View.VISIBLE

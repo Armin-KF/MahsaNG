@@ -107,7 +107,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:accessibilityLiveRegion="polite"
-                        android:maxLines="1" />
+                        android:maxLines="1"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeMinTextSize="@dimen/tv_text_title"
+                        app:autoSizeMaxTextSize="@dimen/tv_text_display"
+                        app:autoSizeStepGranularity="1sp" />
 
                     <TextView
                         android:id="@+id/status_detail"

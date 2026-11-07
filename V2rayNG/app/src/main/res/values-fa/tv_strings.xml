@@ -52,6 +52,8 @@
     <string name="tv_delete_active_blocked">پیش از حذف سرور فعال، سرور دیگری انتخاب کنید.</string>
     <string name="tv_hint_rows">OK برای انتخاب  ·  چپ یا منو برای گزینه‌ها</string>
     <string name="tv_add_title">افزودن کانفیگ</string>
+    <string name="tv_direct">مستقیم، بدون سرور</string>
+    <string name="tv_add_youtube">یوتیوب و توییتر (بدون سرور)</string>
     <string name="tv_add_link">وارد کردن لینک کانفیگ</string>
     <string name="tv_add_sub_link">وارد کردن آدرس اشتراک</string>
     <string name="tv_add_custom_url">وارد کردن آدرس کانفیگ سفارشی</string>

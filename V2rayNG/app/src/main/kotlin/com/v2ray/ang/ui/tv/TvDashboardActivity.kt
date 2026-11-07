@@ -251,7 +251,8 @@ class TvDashboardActivity : BaseActivity() {
         binding.activeType.text = if (config.configType == EConfigType.CUSTOM)
             getString(R.string.server_customize_config) else config.configType.name
         val outbound = config.getProxyOutbound()
-        binding.activeAddress.text = TvFormat.endpoint(outbound?.getServerAddress(), outbound?.getServerPort())
+        binding.activeAddress.text = if (outbound?.tag == TvFormat.SERVERLESS_TAG) getString(R.string.tv_direct)
+            else TvFormat.endpoint(outbound?.getServerAddress(), outbound?.getServerPort())
         val delay = MmkvManager.decodeServerAffiliationInfo(guid)?.testDelayMillis ?: 0L
         binding.activeLatency.visibility = if (delay == 0L) View.GONE else View.VISIBLE
         binding.activeLatency.text = "● " + if (delay > 0) getString(R.string.tv_latency_ms, delay) else getString(R.string.tv_latency_failed)

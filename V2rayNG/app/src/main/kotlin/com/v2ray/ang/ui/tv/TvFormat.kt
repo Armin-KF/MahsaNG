@@ -6,6 +6,9 @@ import java.net.URI
 object TvFormat {
     private const val MASK = "•"
 
+    /** Mahsa's serverless config carries a dummy proxy outbound with this tag; its address is never contacted. */
+    const val SERVERLESS_TAG = "fakeproxy-out"
+
     /** A TV is a shared screen: show enough of a host to recognise it, not enough to copy it. */
     fun maskHost(host: String?): String {
         val h = host?.trim().orEmpty()

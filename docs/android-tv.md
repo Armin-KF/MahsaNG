@@ -133,6 +133,7 @@ Run on the Android TV API 33 x86 emulator, driven by remote key events only. The
 - **Not tested on a physical TV**, and no real overscan panel. Everything above is emulator only.
 - **Phone UI compiles but was not run.** The published phone layout needed repairs just to compile, and no phone image was used.
 - **Only SOCKS was tested end to end.** VLESS, VMess, Trojan, Shadowsocks, WireGuard and custom JSON are covered by unchanged upstream code, but were not connected here.
+- **YouTube & Twitter (no server)** (Servers → Add configuration) imports Mahsa's public `ServerLess_TLSFrag_Xray_Config.json` as a custom config: direct connections with the TLS handshake fragmented. It connected and passed the test on the emulator, which has no filtering, so whether it gets past a real filter is untested.
 - Invalid-config and start-timeout error paths are implemented but were not triggered.
 - After repeated force-stops of a running VPN, the app's UID lost network until the emulator rebooted. The cause was not found. It did not recur in normal use, and a user would not normally do this.
 - Manrope has no Persian glyphs, so Persian text uses the system font. That is deliberate, but the two scripts do not match in style.
