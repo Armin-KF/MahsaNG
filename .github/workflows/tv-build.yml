@@ -48,6 +48,9 @@ jobs:
             echo "$DEBUG_KEYSTORE_BASE64" | base64 -d > ~/.android/debug.keystore
             ks=$(keytool -list -v -keystore ~/.android/debug.keystore -storepass android | sed -n 's/.*SHA256: //p' | tr -d ':' | tr 'A-F' 'a-f')
             echo "::notice::The keystore in the secret has certificate $ks"
+            # The runner image points Android's user home elsewhere, so AGP would otherwise make a fresh debug key.
+            echo "::notice::Runner had ANDROID_USER_HOME=${ANDROID_USER_HOME-unset} ANDROID_SDK_HOME=${ANDROID_SDK_HOME-unset}"
+            echo "ANDROID_USER_HOME=$HOME/.android" >> "$GITHUB_ENV"
           else
             echo "::warning::DEBUG_KEYSTORE_BASE64 is not set; this APK cannot update earlier installs."
           fi
